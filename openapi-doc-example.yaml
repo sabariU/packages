@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  title: DORA Metrics and Trends API
+  description: API to fetch DORA metrics and trends hosted by EA-SRE
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/easre/api
+    description: EA-SRE Development server
+paths:
+  /dora/metrics-and-trends:
+    get:
+      summary: Get DORA Metrics and Trends
+      description: Fetch all DORA metrics and trends in a single payload.
+      operationId: getDoraMetricsAndTrends
+      parameters:
+        - name: lobt
+          in: query
+          description: LOBT for the data (e.g., CBGT).
+          required: false
+          schema:
+            type: string
+        - name: platform
+          in: query
+          description: Platform for the data (e.g., CBG-Digital).
+          required: false
+          schema:
+            type: string
+        - name: appCode
+          in: query
+          description: AppCode for the data (e.g., CAPI).
+          required: false
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          description: Start date for the data (e.g., 2023-01-01).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          description: End date for the data (e.g., 2023-12-31).
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: env
+          in: query
+          description: Environment for the data (e.g., uat/prod).
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with DORA metrics and trends.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: object
+                    properties:
+                      medianDeployment:
+                        type: object
+                        properties:
+                          value:
+                            type: number
+                            example: 8.63
+                          description:
+                            type: string
+                            example: "Median number of days between production deployments."
+                          type:
+                            type: string
+                            example: "days"
+                      failureRate:
+                        type: object
+                        properties:
+                          value:
+                            type: number
+                            example: 0.35
+                          description:
+                            type: string
+                            example: "Percentage of deployments that resulted in failures."
+                          type:
+                            type: string
+                            example: "percent"
+                      mttr:
+                        type: object
+                        properties:
+                          value:
+                            type: number
+                            example: 67.22
+                          description:
+                            type: string
+                            example: "Mean Time to Recovery (MTTR) per incident."
+                          type:
+                            type: string
+                            example: "hours"
+                      medianLeadTime:
+                        type: object
+                        properties:
+                          value:
+                            type: number
+                            example: 43.41
+                          description:
+                            type: string
+                            example: "Median lead time from commit to production."
+                          type:
+                            type: string
+                            example: "days"
+  /dora/filter-options:
+    get:
+      summary: Get Filter Dropdown Values
+      description: Fetch available filter options for LOBT, Platform, AppCode, and FilterYearRange.
+      operationId: getDoraFilterOptions
+      responses:
+        '200':
+          description: Successful response with filter options.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lobs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "1"
+                        name:
+                          type: string
+                          example: "Banking"
+                  platforms:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "101"
+                        name:
+                          type: string
+                          example: "Web"
+                        lobId:
+                          type: string
+                          example: "1"
+                  appCodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "1001"
+                        name:
+                          type: string
+                          example: "OnlineBanking"
+                        platformId:
+                          type: string
+                          example: "101"
+                  filterYearStart:
+                      type: number
+                      items:
+                        type: integer
+                      example: 2021
+                  filterYearEnd:
+                      type: number
+                      items:
+                        type: integer
+                      example: 2024
+        '500':
+          description: Internal server error.
