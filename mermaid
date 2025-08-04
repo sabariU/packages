@@ -1,0 +1,24 @@
+---
+config:
+  theme: forest
+---
+journey
+    title Maker-Checker Job Flow
+    section Maker Actions
+      Enables maker-checker property of a job: 5: Maker
+      Assigns checker with onebankid: 4: Maker
+      Fills job params: 4: Maker
+      Uploads data file (business logic applies): 4: Maker
+      Submits the job: 5: Maker
+    section System (after Maker submits)
+      Job status changes to Submitted: 3: System
+      Invokes Jenkins encryption job (if data uploaded): 3: System
+      Captures encrypted file references from Jenkins: 3: System
+      Logs job details in ELK job-name+maker+checker: 3: System
+    section Checker Actions
+      Sees N jobs awaiting approval: 4: Checker
+      Uploads data file (business logic applies): 3: Checker
+      Approves the job: 5: Checker
+    section System (after Checker approval)
+      Repeats encryption + logging: 3: System
+      Triggers Jenkins job using ELK job details: 4: System
